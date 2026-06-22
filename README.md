@@ -2,6 +2,9 @@
 
 PAWPAW WORLD is a browser game about PawPaw, a cyber-cat exploring a dense neon city — now rebuilt as a full 3D game with a third-person mouse-look camera.
 
+**Live game:** https://mah-era.github.io/pawpaw-world-v1/  
+**Project report:** https://mah-era.github.io/pawpaw-world-v1/docs/PAWPAW_WORLD_Report.html
+
 The game is built with vanilla JavaScript, Three.js (vendored locally in `vendor/`, no internet required at runtime), WebAudio, and localStorage. There are no build steps, no paid systems, and no gambling or real-money loot mechanics.
 
 The original 2D Canvas version is preserved untouched in [`archive/legacy-2d/`](archive/legacy-2d/) and still runs at `archive/legacy-2d/index.html`.
