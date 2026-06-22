@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAWPAW WORLD 3D</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="fx-overlay"></div>
+
+<!-- ===== TITLE SCREEN ===== -->
+<div id="title-screen">
+  <div id="title-embers"></div>
+  <div id="title-scanline"></div>
+  <div class="title-card">
+    <div class="title-kicker">◤ NEON CITY · CYBER-CAT ODYSSEY ◥</div>
+    <h1 data-text="PAWPAW WORLD">PAWPAW<span> WORLD</span></h1>
+    <p class="tag" id="title-tag">a cyber-cat in a neon city</p>
+    <div id="title-buttons">
+      <button id="btn-resume" class="title-btn hidden">▶ RESUME WANDER</button>
+      <button id="btn-new" class="title-btn alt">✦ START NEW</button>
+    </div>
+    <p id="save-note">◉ …</p>
+    <div class="controls-grid">
+      <span><b>Mouse</b> look around</span>
+      <span><b>W A S D</b> move</span>
+      <span><b>Shift</b> sprint</span>
+      <span><b>Space</b> jump / double jump</span>
+      <span><b>X</b> teleport dash</span>
+      <span><b>Scroll</b> zoom camera</span>
+      <span><b>E</b> interact / scratch</span>
+      <span><b>F</b> meow</span>
+      <span><b>M</b> city map</span>
+      <span><b>J</b> journal</span>
+      <span><b>Esc</b> pause</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAUSE OVERLAY ===== -->
+<div id="pause-screen" class="hidden">
+  <div class="title-card small">
+    <h2>PAUSED</h2>
+    <p>mouse released — click below to keep wandering</p>
+    <button id="btn-unpause">RESUME</button>
+  </div>
+</div>
+
+<!-- ===== HUD ===== -->
+<div id="hud" class="hidden">
+  <div id="stats-panel">
+    <div class="stat"><i class="dot kib"></i><span id="st-food">0</span>/<span id="st-food-t">140</span> kibble</div>
+    <div class="stat"><i class="dot chip"></i><span id="st-chip">0</span>/<span id="st-chip-t">18</span> chips</div>
+    <div class="stat"><i class="dot mem"></i><span id="st-mem">0</span>/<span id="st-mem-t">10</span> memories</div>
+    <div class="stat"><i class="dot kit"></i><span id="st-kit">0</span>/8 kittens</div>
+    <div class="stat cred">¢ <span id="st-cred">0</span></div>
+    <div id="xp-row">
+      <span id="lvl-badge">LV 1</span>
+      <div id="xp-bar"><div id="xp-fill"></div></div>
+    </div>
+  </div>
+  <div id="zone-banner"></div>
+  <div id="crosshair"></div>
+  <div id="interact-tip" class="hidden"></div>
+  <div id="carry-tip" class="hidden"></div>
+  <div id="popups"></div>
+  <div id="nearby-hint" class="hidden"></div>
+  <div id="combo-meter" class="hidden"></div>
+  <div id="job-chip" class="hidden"></div>
+  <div id="objectives" class="hidden"></div>
+  <div id="mission-tracker" class="hidden">
+    <div id="mt-head">★ MISSION</div>
+    <div id="mt-title"></div>
+    <div id="mt-desc"></div>
+    <div id="mt-bar"><div id="mt-fill"></div></div>
+  </div>
+  <div id="sidequest-tracker" class="hidden"></div>
+  <div id="compass" class="hidden"><span id="compass-arrow">↑</span><span id="compass-label"></span><span id="compass-dist"></span></div>
+  <div id="guide-box" class="hidden"><b>ORB-E</b><span id="guide-text"></span></div>
+</div>
+
+<!-- ===== DIALOG / LORE / JOURNAL / SHOP MODAL ===== -->
+<div id="modal" class="hidden">
+  <div id="modal-card">
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+    <p class="modal-hint">E / Esc to close</p>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
