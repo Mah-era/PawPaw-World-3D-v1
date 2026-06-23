@@ -1,4 +1,4 @@
-# PAWPAW WORLD 3D
+# PAWPAW WORLD 3D - v1
 
 PAWPAW WORLD is a browser game about PawPaw, a cyber-cat exploring a dense neon city — now rebuilt as a full 3D game with a third-person mouse-look camera.
 
