@@ -729,11 +729,7 @@ export function buildWorld(scene) {
       world.blinkers.push({ m: tip, t: rng() * 5 });
     } else if (choice < 0.56) {
       block(b.x, b.h, b.z + (rng() - 0.5) * 2, Math.min(5, b.w * 0.5), 0.35, Math.min(3.5, b.d * 0.5), greenMat, false);
-      for (let i = 0; i < 3; i++) {
-        const tree = new THREE.Mesh(new THREE.ConeGeometry(0.45, 1.1, 6), greenMat);
-        tree.position.set(b.x + (rng() - 0.5) * 2.6, b.h + 0.8, b.z + (rng() - 0.5) * 1.8);
-        scene.add(tree);
-      }
+      // (rooftop cone "trees" removed)
     } else if (choice < 0.72) {
       block(b.x + (rng() - 0.5) * b.w * 0.4, b.h, b.z + (rng() - 0.5) * b.d * 0.4, 1.7, 1, 1.7, darkMat);
     }
@@ -1220,61 +1216,7 @@ export function buildWorld(scene) {
     }
   }
 
-  // ---------- palm trees: the Vice City silhouette, lit from below ----------
-  {
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x4a3a26, roughness: 0.9 });
-    const frondMat = new THREE.MeshStandardMaterial({ color: 0x1f6b3a, roughness: 0.7, emissive: 0x0a2a16, emissiveIntensity: 0.4, side: THREE.DoubleSide });
-    const frondGeo = new THREE.PlaneGeometry(0.6, 3.4);
-    frondGeo.translate(0, -1.4, 0);   // pivot at the base of the leaf (once, shared)
-    const palm = (x, z) => {
-      const g = new THREE.Group();
-      const h = 5 + rng() * 3;
-      // curved trunk from stacked tapered segments
-      let yy = 0, lean = (rng() - 0.5) * 0.5;
-      const segs = 6;
-      for (let s = 0; s < segs; s++) {
-        const sh = h / segs;
-        const seg = new THREE.Mesh(new THREE.CylinderGeometry(0.16 - s * 0.012, 0.2 - s * 0.012, sh, 6), trunkMat);
-        seg.position.set(Math.sin(lean * s / segs) * 0.9, yy + sh / 2, 0);
-        seg.rotation.z = -lean * 0.12;
-        g.add(seg);
-        yy += sh;
-      }
-      const top = new THREE.Vector3(Math.sin(lean) * 0.9, h, 0);
-      // crown of drooping fronds
-      for (let f = 0; f < 9; f++) {
-        const frond = new THREE.Mesh(frondGeo, frondMat);
-        frond.position.copy(top);
-        frond.position.y += 0.2;
-        frond.rotation.y = (f / 9) * Math.PI * 2;
-        frond.rotation.x = -0.5 - rng() * 0.3;
-        g.add(frond);
-      }
-      // coconuts
-      for (let cN = 0; cN < 3; cN++) {
-        const coco = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 5), trunkMat);
-        coco.position.set(top.x + (rng() - 0.5) * 0.4, top.y - 0.1, top.z + (rng() - 0.5) * 0.4);
-        g.add(coco);
-      }
-      g.position.set(x, 0, z);
-      g.rotation.y = rng() * Math.PI * 2;
-      scene.add(g);
-      // warm uplight pool
-      groundGlow(x, z, 0xff9a4d, 2.6, 2.6, 0.1);
-      world.palms = world.palms || [];
-      world.palms.push({ g, top: top.y, ph: rng() * 9 });
-    };
-    // line palms along road lanes + a ring around the plaza
-    for (let i = 0; i < 34; i++) {
-      const lane = (((rng() * 11) | 0) - 5) * PITCH + 17;
-      const along = (rng() - 0.5) * 2 * B;
-      palm(rng() < 0.5 ? along : lane + 6, rng() < 0.5 ? lane + 6 : along);
-    }
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2;
-      palm(world.shrinePos.x + Math.cos(a) * 16, world.shrinePos.z + Math.sin(a) * 16);
-    }
-  }
+  // ---------- palm trees removed ----------
 
   // street lamps
   for (let i = 0; i < 36; i++) {

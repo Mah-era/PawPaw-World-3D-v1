@@ -249,6 +249,7 @@ const html = `<!DOCTYPE html>
 <nav><div class="wrap">
   <b>◣ ${PROJECT_NAME}</b>
   <a href="#overview">OVERVIEW</a>
+  <a href="#howto">HOW TO PLAY</a>
   <a href="#motion">VIDEO</a>
   <a href="#play">GAMEPLAY</a>
   <a href="#missions">MISSIONS</a>
@@ -301,6 +302,37 @@ const html = `<!DOCTYPE html>
     <div class="stat"><div class="n">5</div><div class="l">collection sets</div></div>
     <div class="stat"><div class="n">10</div><div class="l">rotating tasks</div></div>
     <div class="stat"><div class="n">∞</div><div class="l">courier jobs</div></div>
+  </div>
+</div></section>
+
+<section id="howto"><div class="wrap">
+  <div class="eyebrow">▸ HOW TO PLAY</div>
+  <h2>Your <span class="accent">first session</span>, step by step</h2>
+  <p class="lead">No tutorial walls and no fail states — just open the page and wander. This is the
+    fastest path from the title screen into the rhythm of the city. (Full key bindings and the deeper
+    systems are broken down further below — this is purely the getting-started flow.)</p>
+  <div class="progress-grid">
+    <div class="progress-card"><h3>1 · Launch &amp; enter</h3><p>Open the live build, pick <b>START NEW</b> for a fresh save or <b>RESUME WANDER</b> to continue, then click the screen once to capture the mouse and look around.</p></div>
+    <div class="progress-card"><h3>2 · Follow the gold beam</h3><p>A single bright world beam and the HUD compass always point at your active objective. Walk toward it — your very first mission is a short hop to the Paw Shrine.</p></div>
+    <div class="progress-card"><h3>3 · Grab everything that glows</h3><p>Holo-kibble, rings, and wisps are scattered down every street. Collecting ten kibble unlocks your teleport-dash; twenty-five unlocks the double-jump.</p></div>
+    <div class="progress-card"><h3>4 · Spend at Mei's stall</h3><p>Credits pour in from everything you touch. Early on, visit Mei to buy a longer sprint, higher jump, or the kibble magnet so traversal feels great.</p></div>
+    <div class="progress-card"><h3>5 · Look up, then climb</h3><p>Pawprints and glowing crates mark a route up almost every building. The “CLIMB ME” tower by spawn teaches the climb language; rooftops hide caches and discoveries.</p></div>
+    <div class="progress-card"><h3>6 · Carry a kitten home</h3><p>Find one of the eight lost kittens, pick it up onto PawPaw's back, and return it to the shrine — each one you bring home permanently grows the shrine.</p></div>
+  </div>
+  <div class="two" style="margin-top:22px">
+    <div class="panel"><h3>If you ever feel stuck</h3>
+      <ul class="clean">
+        <li>The <b>nearby-activity hint</b> always names the closest worthwhile thing to do.</li>
+        <li>Press <b>M</b> for the routed city map — it draws a street-following line to your objective.</li>
+        <li>Nothing is missable: missions, kittens, and discoveries wait for you indefinitely.</li>
+        <li>There is no combat and no death — exploring in the “wrong” order is encouraged.</li>
+      </ul></div>
+    <div class="panel"><h3>Three tips for a great first hour</h3>
+      <ul class="clean">
+        <li>Keep a <b>FLOW combo</b> alive by chaining quick actions — it cashes out for bonus credits.</li>
+        <li>Take a <b>courier job</b> the moment you see a board; back-to-back runs multiply your payout.</li>
+        <li>Detour into dark alleys and onto rooftops — that's where the lore and caches hide.</li>
+      </ul></div>
   </div>
 </div></section>
 
@@ -556,32 +588,46 @@ const html = `<!DOCTYPE html>
     <div class="mod"><div class="f">data.js</div><p>Constants, districts, lore, shop, missions, quests, discoveries, sets, and the shared state.</p></div>
   </div>
   <div class="pipe">
-    <span class="step">Scene + Camera</span><span class="arw">→</span>
+    <span class="step">Scene + Camera (70° FOV)</span><span class="arw">→</span>
     <span class="step">RenderPass</span><span class="arw">→</span>
-    <span class="step">UnrealBloom</span><span class="arw">→</span>
-    <span class="step">OutputPass (ACES)</span><span class="arw">→</span>
-    <span class="step">MSAA Canvas</span>
+    <span class="step">UnrealBloom (0.26 / 0.45 / 0.88)</span><span class="arw">→</span>
+    <span class="step">OutputPass · ACES @ 1.12</span><span class="arw">→</span>
+    <span class="step">HalfFloat MSAA RT ×4</span>
   </div>
   <div class="two" style="margin-top:26px">
-    <div class="panel"><h3>Rendering</h3>
+    <div class="panel"><h3>Rendering pipeline</h3>
       <ul class="clean">
-        <li>Real <b>bloom</b> post-processing so neon genuinely glows</li>
-        <li><b>ACES filmic</b> tone mapping for rich, filmic color</li>
-        <li><b>MSAA</b> render target + max <b>anisotropic</b> filtering — crisp, never pixelated</li>
-        <li><b>Image-based lighting</b>: a baked neon-room env map so wet roads &amp; metal reflect color</li>
-        <li>Procedural <b>PBR facades</b> — windows, grime, storefronts — and a wet, puddled ground</li>
-        <li>Drifting haze, volumetric lamp cones, and a glowing parallax skyline</li>
+        <li>An <b>EffectComposer</b> chain: <b>RenderPass → UnrealBloomPass → OutputPass</b>, drawn into a 4× <b>MSAA</b> <code>HalfFloat</code> render target so the post stack still gets hardware anti-aliasing</li>
+        <li><b>UnrealBloom</b> tuned low and selective (strength 0.26, radius 0.45, threshold 0.88) so only true neon blooms, not the whole frame</li>
+        <li><b>ACES filmic</b> tone mapping at exposure 1.12 for rich, non-clipping color</li>
+        <li><b>Image-based lighting</b> from a <b>PMREM</b>-prefiltered neon-room env map, so wet roads and metal pick up colored reflections</li>
+        <li>Procedural <b>PBR facades</b> — window grids, grime streaks, lit storefronts — over a wet, puddled, reflective ground plane</li>
+        <li>Device pixel ratio capped at <b>2</b>; max <b>anisotropic</b> texture filtering keeps signage crisp at grazing angles</li>
+        <li>Drifting haze billboards, volumetric lamp cones, and a glowing parallax skyline fake cheap volumetrics</li>
       </ul></div>
-    <div class="panel"><h3>Systems</h3>
+    <div class="panel"><h3>Simulation &amp; state</h3>
       <ul class="clean">
-        <li>Seeded RNG → the city is identical every visit</li>
-        <li>Capsule-vs-AABB collision, coyote time, double-jump, dash, glide</li>
-        <li>WebAudio: chord-progression bed + reactive rain/traffic/buzz layers</li>
-        <li>Full state serialized to <b>localStorage</b> every few seconds</li>
-        <li>Steady <b>~60 fps</b> with the full post-processing stack</li>
-        <li>Out-of-building "nudge" pass guarantees every fixed objective is reachable</li>
+        <li>A single <b>seeded RNG</b> drives the whole city — every building, route, and prop is identical on every visit</li>
+        <li>Player physics: <b>capsule-vs-AABB</b> collision with coyote time, a jump buffer, double-jump, teleport-dash, and glide</li>
+        <li>A wall-aware third-person camera slides in front of geometry and <b>fades the cat to transparent</b> only when it pulls in very close</li>
+        <li><b>fx.js</b> renders all sparks, confetti, and reward floaters from one pooled <code>THREE.Points</code> cloud — effectively a single draw call</li>
+        <li><b>WebAudio</b>: a reverb-bussed chord-progression music bed plus reactive rain / traffic / neon-buzz ambience layers</li>
+        <li>Full game state serialized to <b>localStorage</b> (<code>pawpaw3d.save</code>) on every meaningful event and on exit</li>
+        <li>An out-of-building <b>“nudge” pass</b> guarantees every fixed objective ends up reachable on the seeded map</li>
       </ul></div>
   </div>
+  <div class="subhead">PIPELINE &amp; PERFORMANCE SPECIFICS</div>
+  <table>
+    <tr><th>Concern</th><th>Implementation</th></tr>
+    <tr><td><b>Renderer</b></td><td>Three.js <b>r160</b>, <code>WebGLRenderer</code> with hardware antialias, pixel-ratio clamped to 2, ACES filmic tone mapping</td></tr>
+    <tr><td><b>Post-processing</b></td><td>EffectComposer over a <code>HalfFloatType</code> render target with <b>4× MSAA</b> — RenderPass, selective UnrealBloom, OutputPass</td></tr>
+    <tr><td><b>Lighting</b></td><td>PMREM-prefiltered neon env map for IBL, hemisphere + directional key driven by the day/night cycle, plus per-sign emissive glow</td></tr>
+    <tr><td><b>Particles</b></td><td>One reusable <code>THREE.Points</code> pool (<code>fx.js</code>) for every burst, float, and flash — no per-effect allocations in the hot loop</td></tr>
+    <tr><td><b>Audio</b></td><td>Pure WebAudio graph: scheduled chord bed through a reverb bus, plus distance-reactive ambience and the full SFX set — no audio files</td></tr>
+    <tr><td><b>Persistence</b></td><td>Entire run (collectibles, XP, upgrades, kittens, quests, missions, position, active courier job) JSON-serialized to <code>localStorage</code></td></tr>
+    <tr><td><b>Footprint</b></td><td>No bundler, no framework, no network at runtime; one vendored copy of Three.js and its example modules served from any static host</td></tr>
+    <tr><td><b>Performance</b></td><td>Steady <b>~60 fps</b> with the full post stack; seeded generation and pooled effects keep the per-frame allocation budget near zero</td></tr>
+  </table>
 </div></section>
 
 <section id="design"><div class="wrap">
@@ -629,6 +675,26 @@ const html = `<!DOCTYPE html>
 </div></footer>
 <script>
   document.querySelectorAll('video[data-clip="opening"]').forEach(v => { v.playbackRate = 1.35; });
+  // Auto-play each clip when it scrolls into view; pause when it leaves.
+  // Browsers only allow unprompted playback while muted, so we mute on auto-start —
+  // viewers can unmute with the controls. The looping hero opener is left untouched.
+  (function () {
+    var clips = document.querySelectorAll('.clip video');
+    if (!('IntersectionObserver' in window) || !clips.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+          v.muted = true;
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: [0, 0.5, 1] });
+    clips.forEach(function (v) { io.observe(v); });
+  })();
 </script>
 </body>
 </html>`;
