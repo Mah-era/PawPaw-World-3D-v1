@@ -641,6 +641,8 @@ export function buildWorld(scene) {
         emissive: 0xffffff, emissiveIntensity: 1.0,
       });
       m.emissiveMap = m.map;
+      m.userData.baseEmissive = m.emissiveIntensity;
+      (world.windowMats = world.windowMats || []).push(m);
       arr.push(m);
     }
     return arr[(rng() * arr.length) | 0];
@@ -668,6 +670,8 @@ export function buildWorld(scene) {
           emissive: 0xffffff, emissiveIntensity: 0.6,
         });
         m.emissiveMap = m.map;
+        m.userData.baseEmissive = m.emissiveIntensity;
+        (world.windowMats = world.windowMats || []).push(m);
         return m;
       };
       arr.push([mk(), mk()]);

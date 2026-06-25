@@ -44,9 +44,7 @@ function tile(name, label) {
 const GALLERY = [
   ["01_market_street", "Neon Market", "Warm food-stall district — lantern strings, a floating music note, wet magenta reflections."],
   ["02_plaza_shrine", "Transit Plaza", "The calm heart of the city: the Paw Shrine, fountain, and concentric floor rings."],
-  ["03_back_alley", "Back Alleys", "Narrow, secretive lanes packed with clutter, crates, and steam."],
   ["04_corporate", "Corporate Sector", "Tall glass towers, ring-lit roofs, and sweeping searchlights."],
-  ["05_docks", "Old Signal Docks", "A lonely antenna farm at the city's windswept edge."],
   ["07_apex_spire", "The Apex Spire", "A beaconed spire anchors the skyline, reached by a rising neon skyway."],
   ["08_zipline", "Rooftop Zipline", "Rideable cables carry PawPaw from high roofs to low ones."],
   ["24_rooftops", "Rooftop Traversal", "Climb routes and roof-to-roof bridges open up a whole upper city."],
@@ -55,13 +53,11 @@ const GALLERY = [
   ["18_quest_npc", "Quest NPCs", "Named characters give interconnected side-errands with dialogue."],
   ["19_courier_board", "Courier District Route", "A wide delivery corridor through the building grid near a courier hub."],
   ["13_kitten", "Alley Objective Route", "A street-level approach through crates, service doors, and reflective lanes."],
-  ["14_cache", "Secret-Hunting Route", "A quiet road segment leading toward the city's hidden discovery spaces."],
   ["16_blackout", "City Blackout", "A live world-event: the grid browns out to neon-only, then surges back."],
   ["20_wide_city", "Density", "A dense, handcrafted-feeling city that's always alive with motion."],
   ["21_market_alley2", "Market Lanes", "Glowing storefronts and overhead signage line the market."],
   ["22_plaza_wide", "Plaza Approach", "The mission compass and gold beam always point somewhere worth going."],
   ["25_corner_neon", "Street Corner", "Reflective wet asphalt mirrors the neon — image-based lighting at work."],
-  ["17_restore", "Power Restored", "Back to full neon after a blackout event near a courier hub."],
 ];
 
 const html = `<!DOCTYPE html>
@@ -493,7 +489,6 @@ const html = `<!DOCTYPE html>
     ${fig("19_courier_board","Courier District Route","A clear street corridor used by timed deliveries between city landmarks.")}
     ${fig("08_zipline","Rooftop Zipline","Rideable rooftop cables create fast traversal lines across the city.")}
     ${fig("13_kitten","Alley Objective Route","Street-level objectives use open approaches, service doors, and crate landmarks.")}
-    ${fig("14_cache","Secret-Hunting Route","Hidden discoveries and caches reward leaving the main illuminated roads.")}
     ${fig("act_climb","Vertical Routes","The CLIMB-ME tower teaches the city's climb language right away.")}
     ${fig("act_shrine","The Paw Shrine","Carry rescued kittens here — it grows with every one brought home.")}
     ${fig("act_citylife","Ambient Life","Citizens, traffic, and an elevated train keep the streets busy.")}
@@ -560,9 +555,7 @@ const html = `<!DOCTYPE html>
   </div>
   <div class="gallery" style="margin-top:22px">
     ${fig("act_rain","Rain-Slick City","Wet surfaces and puddles intensify the reflected neon during rain.")}
-    ${fig("03_back_alley","Fog and Atmospheric Depth","Haze, steam, alley lighting, and distance fog layer the narrow districts.")}
-    ${fig("16_blackout","Blackout","The city grid drops to neon-only during the timed blackout event.")}
-    ${fig("17_restore","Power Restored","Full lighting returns around a courier hub after the blackout.")}
+    ${fig("16_blackout","City Blackout","Building lights cut out for several seconds — only street lamps and neon remain.")}
   </div>
 </div></section>
 

@@ -1115,11 +1115,21 @@ export function updateGame(dt, time) {
     if (d.life <= 0) { scene.remove(d.m); drops.splice(i, 1); }
   }
 
-  // city blackout: dim the grid via a multiplier the day-cycle respects, then surge back
+  // city blackout: building windows cut out (only street lamps remain), then surge back
   if (blackoutT > 0) {
     blackoutT -= dt;
-    world.blackout = blackoutT > 0.4 ? 0.22 : 1;
-    if (blackoutT <= 0) world.blackout = 1;
+    const dark = blackoutT > 0.5;                 // ~7 s of full blackout, then a quick surge
+    world.blackout = dark ? 0.18 : 1;             // ambient hemisphere dims too
+    const wm = world.windowMats || [];
+    for (const m of wm) {
+      const base = m.userData.baseEmissive ?? m.emissiveIntensity;
+      const target = dark ? 0 : base;             // windows fully off during blackout
+      m.emissiveIntensity += (target - m.emissiveIntensity) * Math.min(1, dt * 10);
+    }
+    if (blackoutT <= 0) {
+      world.blackout = 1;
+      for (const m of wm) m.emissiveIntensity = m.userData.baseEmissive ?? m.emissiveIntensity;
+    }
   }
 
   updateInteractTip();
@@ -1158,10 +1168,10 @@ function runMiniEvent(pp) {
     }
     ui.popup("a courier drone fumbled its cargo!");
   } else if (roll < 0.74) {
-    // CITY BLACKOUT: the grid browns out for a few seconds, then surges back
-    blackoutT = 4;
+    // CITY BLACKOUT: building lights cut out for ~7 s (only street lamps remain), then surge back
+    blackoutT = 7.5;
     sfx.whoosh();
-    ui.popup("⚡ city blackout — the grid is browning out…");
+    ui.popup("⚡ city blackout — the building lights just went out…");
     flash("rgba(0,0,20,0.4)", 0.6);
   } else if (roll < 0.9) {
     // WISP SWARM: a cluster of data wisps surges up nearby — grab them fast
